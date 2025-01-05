@@ -1,20 +1,19 @@
 from itertools import product
 from collections import defaultdict
 
-# داده‌های ورودی
 instructors = {
-    "AI": ["Dr.Moosavi", "Dr.Shahabi"],
-    "Physics": ["Dr.Pouzesh"],
-    "Chemistry": ["Dr.Fathi"],
-    "Music": ["Dr.Shokoohi", "Dr.Mortazavi"],
-    "Cinema": ["Dr.Mortazavi", "Dr.Khosravani"],
-    "Algebra": ["Dr.Pourbagheri"]
+"AI": ["Dr.Moosavi","Dr.Shahabi"],
+"Physics": ["Dr.Pouzesh"],
+"Chemistry": ["Dr.Fathi"],
+"Music": ["Dr.Shokoohi","Dr.Mortazavi"],
+"Cinema": ["Dr.Mortazavi","Dr.Khosravani"],
+"Algebra": ["Dr.Pourbagheri"]
 }
-
 classrooms = ["Room1", "Room2", "Room3"]
 time_slots = ["9:00-10:00", "10:00-11:00", "11:00-12:00"]
 
-# تعریف دامنه برای هر درس
+
+
 def generate_domains():
     domains = {}
     for course, teachers in instructors.items():
@@ -22,24 +21,22 @@ def generate_domains():
     return domains
 
 def is_consistent(assignment, course, value):
-    """بررسی محدودیت‌ها"""
+    """محدودیت‌ها"""
     room, time, teacher = value
     for assigned_course, (assigned_room, assigned_time, assigned_teacher) in assignment.items():
-        # محدودیت مکان و زمان
         if room == assigned_room and time == assigned_time:
             return False
-        # محدودیت استاد
         if teacher == assigned_teacher and time == assigned_time:
             return False
     return True
 
 def select_unassigned_variable(domains, assignment):
-    """انتخاب متغیر با MRV"""
+    """MRV"""
     unassigned = [var for var in domains if var not in assignment]
     return min(unassigned, key=lambda var: len(domains[var]))
 
 def order_domain_values(variable, domains, assignment):
-    """مرتب‌سازی مقادیر دامنه با LCV"""
+    """LCV"""
     def count_conflicts(value):
         room, time, teacher = value
         conflicts = 0
@@ -47,19 +44,17 @@ def order_domain_values(variable, domains, assignment):
             if var in assignment:
                 continue
             for val in domains[var]:
-                # بررسی تداخل‌های مربوط به مکان و زمان
                 if val[0] == room and val[1] == time:
                     conflicts += 1
-                # بررسی تداخل‌های مربوط به استاد
                 if val[2] == teacher and val[1] == time:
                     conflicts += 1
         return conflicts
 
-    # مرتب‌سازی مقادیر دامنه بر اساس کمترین تداخل
-    return domains[variable]
+    return sorted(domains[variable], key=count_conflicts)
+
 
 def forward_checking(domains, variable, value):
-    """اجرای Forward Checking"""
+    """Forward Checking"""
     room, time, teacher = value
     new_domains = defaultdict(list, {var: list(vals) for var, vals in domains.items()})
 
@@ -68,17 +63,17 @@ def forward_checking(domains, variable, value):
             continue
         new_domains[var] = [
             val for val in domains[var]
-            if (val[0] != room or val[1] != time) and  # محدودیت مکان و زمان
-               (val[2] != teacher or val[1] != time)  # محدودیت استاد
+            if (val[0] != room or val[1] != time) and
+               (val[2] != teacher or val[1] != time)
         ]
 
         if not new_domains[var]:
-            return None  # اگر دامنه خالی شد، ناسازگاری رخ داده است
+            return None
 
     return new_domains
 
 def backtrack(assignment, domains):
-    """الگوریتم Backtracking"""
+    """Backtracking"""
     if len(assignment) == len(instructors):
         return assignment
 
@@ -97,14 +92,12 @@ def backtrack(assignment, domains):
 
     return None
 
-# حل مسئله
 def solve_schedule():
     domains = generate_domains()
     assignment = {}
     result = backtrack(assignment, domains)
     return result
 
-# اجرای برنامه
 solution = solve_schedule()
 
 if solution:
