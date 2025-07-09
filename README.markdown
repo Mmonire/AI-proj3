@@ -76,18 +76,3 @@ AI: Room2 at 9:00-10:00 with Dr.Moosavi
 Music: Room2 at 10:00-11:00 with Dr.Shokoohi
 Cinema: Room2 at 11:00-12:00 with Dr.Mortazavi
 ```
-
-## Contributing
-Contributions are welcome! Please follow these steps:
-1. Fork the repository.
-2. Create a new branch (`git checkout -b feature-branch`).
-3. Make your changes and commit (`git commit -m 'Add feature'`).
-4. Push to the branch (`git push origin feature-branch`).
-5. Open a pull request.
-
-## License
-This project is licensed under the MIT License.
-
-## Notes
-- The project was designed as part of an academic assignment with a deadline of January 11, 2025, 23:59:59.
-- The code is documented as required by the project specifications.
